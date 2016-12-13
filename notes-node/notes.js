@@ -1,6 +1,6 @@
-const fs=require('fs');
+const fs = require('fs');
 
-console.log('Strating notes.js')
+//console.log('Strating notes.js')
 
 var fetchNotes = () => {
   try {
@@ -34,7 +34,7 @@ var addNote = (title, body) => {
 };
 
 var getAll = () => {
-  console.log('Getting all notes');
+  return fetchNotes();
 };
 
 var getNote = (title) => {

@@ -1,12 +1,33 @@
-console.log('Starting app.js');
+//console.log('Starting app.js');
 
 const fs = require('fs');
 // const os = require('os');
-const _ = require('lodash');
+//const _ = require('lodash');
 const yargs = require('yargs');
 
 const notes = require('./notes.js');
-const argv = yargs.argv;
+const title = {
+  describe: 'Title of note',
+  demand: true,
+  alias: 't'
+};
+
+const body = {
+  describe: 'Body of note',
+  demand: true,
+  alias: 'b'
+};
+
+const argv = yargs
+  .command('add', 'Add a new note', {
+    title: title,
+    body: body
+  })
+  .command('list', 'List all notes')
+  .command('read', 'Read a note', { title: title })
+  .command('remove', 'Remove a note', { title: title})
+  .help()
+  .argv;
 
 let command = argv._[0];
 
@@ -39,7 +60,9 @@ if (command === 'add') {
     notes.logNote(note);
   }
 } else if (command === 'list') {
-  notes.getAll();
+  var allNotes = notes.getAll();
+  console.log(`Printing ${allNotes.length} note(s).`);
+  allNotes.filter((note) => notes.logNote(note));
 } else if (command == 'read'){
   let note = notes.getNote(argv.title);
   if (note) {
