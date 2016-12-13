@@ -1,16 +1,21 @@
-//console.log('Starting app.js');
+console.log('Starting app.js');
 
 const fs = require('fs');
 // const os = require('os');
 const _ = require('lodash');
+const yargs = require('yargs');
 
 const notes = require('./notes.js');
+const argv = yargs.argv;
 
-// var twoplustwo = notes.add(2,2);
+let command = argv._[0];
+
+
+// let twoplustwo = notes.add(2,2);
 // let filteredArray = _.uniq(['Tanim', 1 , 'Tanim', 1,2,3,4]);
 // console.log(twoplustwo);
 //
-// var user = os.userInfo();
+// let user = os.userInfo();
 //
 // fs.appendFile('greetings.txt', `Hello ${user.username} ! You are ${notes.age}`, function (err) {
 //
@@ -23,17 +28,30 @@ const notes = require('./notes.js');
 // console.log(_.isString(true));
 // console.log(_.isString('Tanim'));
 // console.log(filteredArray);
-let command = process.argv[2];
 //console.log('Command:', command);
 
 if (command === 'add') {
-  console.log('Adding new note');
+  let note = notes.addNote(argv.title, argv.body);
+  if (typeof note === 'undefined'){
+    console.log('Note title already exixts');
+  } else {
+    console.log('Note created')
+    notes.logNote(note);
+  }
 } else if (command === 'list') {
-  console.log('Listing all notes');
+  notes.getAll();
 } else if (command == 'read'){
-  console.log('Reading note');
+  let note = notes.getNote(argv.title);
+  if (note) {
+    console.log('Note found')
+    notes.logNote(note);
+  } else {
+    console.log('No note found!')
+  }
 } else if (command === 'remove') {
-  console.log('Removing note')
+  let noteRemoved = notes.removeNote(argv.title);
+  let message = noteRemoved ? 'Note was removed' : 'Note not found';
+  console.log(message);
 } else {
  console.log('Command not recongnized!')
 }
